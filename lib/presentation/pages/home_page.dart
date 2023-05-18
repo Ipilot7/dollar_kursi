@@ -33,46 +33,49 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 10,
-            ),
-            child: SearchBar(
-              hintText: 'Qidirmoq',
-              leading: IconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset(AppAssets.icons.drawer),
-              ),
-              trailing: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: SvgPicture.asset(AppAssets.icons.search),
-                ),
-              ],
-            ),
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
           ),
-          ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, index) {
-              return BankContainer(
+          child: SearchBar(
+            hintText: 'Qidirmoq',
+            leading: IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(AppAssets.icons.drawer),
+            ),
+            trailing: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: SvgPicture.asset(AppAssets.icons.search),
+              ),
+            ],
+          ),
+        ),
+        ...List.generate(
+          6,
+          (index) => Column(
+            children: [
+              BankContainer(
                 image: bankImages[index],
                 name: bankNames[index],
-              );
-            },
-            separatorBuilder: (BuildContext context, index) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(color: AppColors.primarySurface),
-            ),
-            itemCount: 6,
+              ),
+              index != 5
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Divider(
+                        color: AppColors.secondarySurface,
+                        height: 8,
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
           ),
-          const SizedBox(height: 6),
-        ],
-      ),
+        ),
+        const SizedBox(height: 6),
+      ],
     );
   }
 }
