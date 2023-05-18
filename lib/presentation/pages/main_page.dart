@@ -1,3 +1,4 @@
+import 'package:dollar_kursi/presentation/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ class _MainPageState extends State<MainPage> {
     var mainState = context.watch<MainAppState>();
 
     return Scaffold(
+      key: context.watch<MainAppState>().key,
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: PageView(
@@ -60,6 +62,7 @@ class _MainPageState extends State<MainPage> {
               child: SvgPicture.asset(AppAssets.icons.filter),
             )
           : null,
+      drawer: const AppDrawer(),
     );
   }
 }

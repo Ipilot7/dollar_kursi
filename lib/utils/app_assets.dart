@@ -39,7 +39,7 @@ class AppIcons extends AssetsFolder {
   String get up => '$basePath/ic-up.svg';
   // Home Screen Icons
 
-  String get circle => '$basePath/ic-dollar.svg';
+  String get circle => '$basePath/ic-circle.svg';
   // Drawer Icons
 }
 

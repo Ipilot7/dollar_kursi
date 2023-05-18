@@ -1,7 +1,9 @@
+import 'package:dollar_kursi/core/provider/main_state.dart';
 import 'package:dollar_kursi/presentation/widgets/bank_container.dart';
 import 'package:dollar_kursi/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/app_assets.dart';
 
@@ -43,7 +45,9 @@ class _HomePageState extends State<HomePage> {
           child: SearchBar(
             hintText: 'Qidirmoq',
             leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<MainAppState>().key.currentState!.openDrawer();
+              },
               icon: SvgPicture.asset(AppAssets.icons.drawer),
             ),
             trailing: [
