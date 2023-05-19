@@ -41,4 +41,18 @@ class AppTextStyles {
     fontFamily: font,
     fontSize: 16,
   );
+
+  static TextStyle drawerActiveTitle = TextStyle(
+    color: const Color(0xFF1D192B),
+    fontWeight: FontWeight.w600,
+    fontFamily: font,
+    fontSize: 14,
+  );
+
+  static TextStyle drawerTitle = TextStyle(
+    color: const Color(0xFF49454F),
+    fontWeight: FontWeight.w500,
+    fontFamily: font,
+    fontSize: 14,
+  );
 }

@@ -22,6 +22,11 @@ class _HomePageState extends State<HomePage> {
     'Agrobank',
     'Trastbank',
     'Infinbank',
+    'Kapitalbank',
+    'Sanoat Qurilish Bank',
+    'Ziraat Bank',
+    'Milliy Bank',
+    'Ipak yo\'li bank',
   ];
 
   List<String> bankImages = [
@@ -31,6 +36,11 @@ class _HomePageState extends State<HomePage> {
     AppAssets.images.bank4,
     AppAssets.images.bank5,
     AppAssets.images.bank6,
+    AppAssets.images.bank7,
+    AppAssets.images.bank8,
+    AppAssets.images.bank9,
+    AppAssets.images.bank10,
+    AppAssets.images.bank11,
   ];
 
   @override
@@ -59,14 +69,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         ...List.generate(
-          6,
+          11,
           (index) => Column(
             children: [
               BankContainer(
                 image: bankImages[index],
                 name: bankNames[index],
               ),
-              index != 5
+              index != 10
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Divider(
