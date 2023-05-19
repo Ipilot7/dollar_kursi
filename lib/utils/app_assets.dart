@@ -41,6 +41,11 @@ class AppIcons extends AssetsFolder {
 
   String get circle => '$basePath/ic-circle.svg';
   // Drawer Icons
+
+  String get sortAlphabet => '$basePath/ic-alphabet.svg';
+  String get sortDown => '$basePath/ic-sort-down.svg';
+  String get sortUp => '$basePath/ic-sort-up.svg';
+  //Sort Section Icons
 }
 
 class AppImages extends AssetsFolder {

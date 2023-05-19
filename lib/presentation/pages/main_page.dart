@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../core/provider/main_state.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
+import '../widgets/sort_item.dart';
 import 'settings_page.dart';
 import 'home_page.dart';
 
@@ -19,6 +20,18 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   PageController pageController = PageController(initialPage: 0);
+
+  List<String> titles = [
+    'Alifbo tartibida',
+    'Qimmat sotib oluchi',
+    'Arzon sotuvchi',
+  ];
+
+  List<String> icons = [
+    AppAssets.icons.sortAlphabet,
+    AppAssets.icons.sortUp,
+    AppAssets.icons.sortDown,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +71,28 @@ class _MainPageState extends State<MainPage> {
       ),
       floatingActionButton: mainState.selectedIndex == 0
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  context: context,
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...List.generate(
+                          3,
+                          (index) => SortItem(
+                            title: titles[index],
+                            iconPath: icons[index],
+                            index: index,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  },
+                );
+              },
               child: SvgPicture.asset(AppAssets.icons.filter),
             )
           : null,

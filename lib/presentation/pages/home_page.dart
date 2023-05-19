@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var currentState = context.read<MainAppState>().key.currentState!;
     return ListView(
       children: [
         Padding(
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
             hintText: 'Qidirmoq',
             leading: IconButton(
               onPressed: () {
-                context.read<MainAppState>().key.currentState!.openDrawer();
+                currentState.openDrawer();
               },
               icon: SvgPicture.asset(AppAssets.icons.drawer),
             ),
