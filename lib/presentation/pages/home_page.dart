@@ -28,6 +28,14 @@ class _HomePageState extends State<HomePage> {
     'Ziraat Bank',
     'Milliy Bank',
     'Ipak yo\'li bank',
+    'Asia Alliance Bank',
+    'Asakabank',
+    'Garant Bank',
+    'Ipoteka Bank',
+    'Orient Finans Bank',
+    'Universalbank',
+    'Qishloq Qurilish Bank',
+    'Aloqabank',
   ];
 
   List<String> bankImages = [
@@ -42,6 +50,14 @@ class _HomePageState extends State<HomePage> {
     AppAssets.images.bank9,
     AppAssets.images.bank10,
     AppAssets.images.bank11,
+    AppAssets.images.bank12,
+    AppAssets.images.bank13,
+    AppAssets.images.bank14,
+    AppAssets.images.bank15,
+    AppAssets.images.bank16,
+    AppAssets.images.bank17,
+    AppAssets.images.bank18,
+    AppAssets.images.bank19,
   ];
 
   @override
@@ -78,14 +94,14 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 10),
         ...List.generate(
-          11,
+          19,
           (index) => Column(
             children: [
               BankContainer(
                 image: bankImages[index],
                 name: bankNames[index],
               ),
-              index != 10
+              index != 18
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Divider(

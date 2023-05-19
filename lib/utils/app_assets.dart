@@ -57,5 +57,13 @@ class AppImages extends AssetsFolder {
   String get bank9 => '$basePath/bank-9.png';
   String get bank10 => '$basePath/bank-10.png';
   String get bank11 => '$basePath/bank-11.png';
+  String get bank12 => '$basePath/bank-12.png';
+  String get bank13 => '$basePath/bank-13.png';
+  String get bank14 => '$basePath/bank-14.png';
+  String get bank15 => '$basePath/bank-15.png';
+  String get bank16 => '$basePath/bank-16.png';
+  String get bank17 => '$basePath/bank-17.png';
+  String get bank18 => '$basePath/bank-18.png';
+  String get bank19 => '$basePath/bank-19.png';
   // Bank Photos
 }
