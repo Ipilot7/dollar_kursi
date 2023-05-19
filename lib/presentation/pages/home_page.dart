@@ -1,6 +1,7 @@
 import 'package:dollar_kursi/core/provider/main_state.dart';
 import 'package:dollar_kursi/presentation/widgets/bank_container.dart';
 import 'package:dollar_kursi/utils/app_colors.dart';
+import 'package:dollar_kursi/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +69,14 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Bugun - 19.05.2023 (10:00)',
+            style: AppTextStyles.pageTitle.copyWith(fontSize: 18),
+          ),
+        ),
+        const SizedBox(height: 10),
         ...List.generate(
           11,
           (index) => Column(
@@ -88,7 +97,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 62),
       ],
     );
   }

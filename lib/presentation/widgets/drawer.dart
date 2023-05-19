@@ -20,7 +20,7 @@ class AppDrawer extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 18, 0, 18),
               child: Text(
                 'Dollar kursi',
-                style: AppTextStyles.title,
+                style: AppTextStyles.pageTitle,
               ),
             ),
             Padding(
