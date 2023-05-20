@@ -73,6 +73,7 @@ class _MainPageState extends State<MainPage> {
           ? FloatingActionButton(
               onPressed: () {
                 showModalBottomSheet(
+                  backgroundColor: AppColors.primarySurface,
                   showDragHandle: true,
                   context: context,
                   builder: (context) {
