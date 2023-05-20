@@ -1,3 +1,4 @@
+import 'package:dollar_kursi/core/models/bank_model.dart';
 import 'package:dollar_kursi/core/provider/main_state.dart';
 import 'package:dollar_kursi/presentation/widgets/bank_container.dart';
 import 'package:dollar_kursi/utils/app_colors.dart';
@@ -16,28 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> bankNames = [
-    'Xalq banki',
-    'Turonbank',
-    'Hamkorbank',
-    'Agrobank',
-    'Trastbank',
-    'Infinbank',
-    'Kapitalbank',
-    'Sanoat Qurilish Bank',
-    'Ziraat Bank',
-    'Milliy Bank',
-    'Ipak yo\'li bank',
-    'Asia Alliance Bank',
-    'Asakabank',
-    'Garant Bank',
-    'Ipoteka Bank',
-    'Orient Finans Bank',
-    'Universalbank',
-    'Qishloq Qurilish Bank',
-    'Aloqabank',
-  ];
-
   List<String> bankImages = [
     AppAssets.images.bank1,
     AppAssets.images.bank2,
@@ -62,7 +41,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var currentState = context.read<MainAppState>().key.currentState!;
+    var currentState = context.read<MainAppState>();
+    List<BankModel> data = currentState.allBanks;
+
     return ListView(
       children: [
         Padding(
@@ -74,7 +55,7 @@ class _HomePageState extends State<HomePage> {
             hintText: 'Qidirmoq',
             leading: IconButton(
               onPressed: () {
-                currentState.openDrawer();
+                currentState.key.currentState!.openDrawer();
               },
               icon: SvgPicture.asset(AppAssets.icons.drawer),
             ),
@@ -95,14 +76,16 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 10),
         ...List.generate(
-          19,
+          data.length,
           (index) => Column(
             children: [
               BankContainer(
                 image: bankImages[index],
-                name: bankNames[index],
+                name: data[index].bankName!,
+                buyPrice: data[index].buy!,
+                sellPrice: data[index].sell!,
               ),
-              index != 18
+              index != data.length - 1
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Divider(

@@ -40,16 +40,20 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: context.watch<MainAppState>().key,
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: PageView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: pageController,
-          children: const [
-            HomePage(),
-            SettingsPage(),
-          ],
-        ),
-      ),
+      body: mainState.isLoading
+          ? const Center(
+              child: CircularProgressIndicator.adaptive(),
+            )
+          : SafeArea(
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: pageController,
+                children: const [
+                  HomePage(),
+                  SettingsPage(),
+                ],
+              ),
+            ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: mainState.selectedIndex,
         onDestinationSelected: (value) {

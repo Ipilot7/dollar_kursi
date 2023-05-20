@@ -9,11 +9,15 @@ class BankContainer extends StatelessWidget {
   const BankContainer({
     required this.image,
     required this.name,
+    required this.buyPrice,
+    required this.sellPrice,
     super.key,
   });
 
   final String name;
   final String image;
+  final int buyPrice;
+  final int sellPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class BankContainer extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '11440',
+                      '$buyPrice',
                       style: AppTextStyles.description,
                     ),
                     const SizedBox(width: 10),
@@ -55,7 +59,7 @@ class BankContainer extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '11520',
+                      '$sellPrice',
                       style: AppTextStyles.description,
                     ),
                     const SizedBox(width: 10),
