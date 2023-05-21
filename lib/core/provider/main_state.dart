@@ -6,7 +6,6 @@ import '../models/bank_model.dart';
 
 class MainAppState extends ChangeNotifier {
   int selectedIndex = 0;
-  bool isLoading = false;
   var box = Hive.box('banks');
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
@@ -15,7 +14,6 @@ class MainAppState extends ChangeNotifier {
 
   MainAppState() {
     getBanks();
-    addBox();
   }
 
   void changePage(int index) {
@@ -23,15 +21,10 @@ class MainAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeLoading() {
-    isLoading = !isLoading;
-    notifyListeners();
-  }
-
   void getBanks() async {
-    changeLoading();
     allBanks = await BankService.getBanks();
-    changeLoading();
+    box.isEmpty ? addBox() : null;
+    notifyListeners();
   }
 
   void addBox() {
@@ -44,6 +37,5 @@ class MainAppState extends ChangeNotifier {
         ),
       );
     }
-    notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
@@ -38,11 +39,17 @@ class BankContainer extends StatelessWidget {
                 border: Border.all(color: AppColors.secondarySurface),
               ),
               child: CachedNetworkImage(
-                placeholder: (context, url) => const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator.adaptive(),
-                ),
                 imageUrl: image,
+                placeholder: (context, url) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: const SizedBox(
+                      width: 56,
+                      height: 56,
+                    ),
+                  );
+                },
               ),
             ),
             Text(

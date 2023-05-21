@@ -40,7 +40,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: context.watch<MainAppState>().key,
       backgroundColor: AppColors.background,
-      body: mainState.isLoading
+      body: mainState.box.isEmpty
           ? const Center(
               child: CircularProgressIndicator.adaptive(),
             )
