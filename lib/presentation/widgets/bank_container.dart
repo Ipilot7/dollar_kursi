@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -36,7 +37,13 @@ class BankContainer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.secondarySurface),
               ),
-              child: Image.asset(image),
+              child: CachedNetworkImage(
+                placeholder: (context, url) => const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                imageUrl: image,
+              ),
             ),
             Text(
               name,

@@ -50,25 +50,4 @@ class AppIcons extends AssetsFolder {
 
 class AppImages extends AssetsFolder {
   AppImages() : super('assets/images');
-
-  String get bank1 => '$basePath/bank-1.png';
-  String get bank2 => '$basePath/bank-2.png';
-  String get bank3 => '$basePath/bank-3.png';
-  String get bank4 => '$basePath/bank-4.png';
-  String get bank5 => '$basePath/bank-5.png';
-  String get bank6 => '$basePath/bank-6.png';
-  String get bank7 => '$basePath/bank-7.png';
-  String get bank8 => '$basePath/bank-8.png';
-  String get bank9 => '$basePath/bank-9.png';
-  String get bank10 => '$basePath/bank-10.png';
-  String get bank11 => '$basePath/bank-11.png';
-  String get bank12 => '$basePath/bank-12.png';
-  String get bank13 => '$basePath/bank-13.png';
-  String get bank14 => '$basePath/bank-14.png';
-  String get bank15 => '$basePath/bank-15.png';
-  String get bank16 => '$basePath/bank-16.png';
-  String get bank17 => '$basePath/bank-17.png';
-  String get bank18 => '$basePath/bank-18.png';
-  String get bank19 => '$basePath/bank-19.png';
-  // Bank Photos
 }

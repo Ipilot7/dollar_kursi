@@ -17,28 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> bankImages = [
-    AppAssets.images.bank1,
-    AppAssets.images.bank2,
-    AppAssets.images.bank3,
-    AppAssets.images.bank4,
-    AppAssets.images.bank5,
-    AppAssets.images.bank6,
-    AppAssets.images.bank7,
-    AppAssets.images.bank8,
-    AppAssets.images.bank9,
-    AppAssets.images.bank10,
-    AppAssets.images.bank11,
-    AppAssets.images.bank12,
-    AppAssets.images.bank13,
-    AppAssets.images.bank14,
-    AppAssets.images.bank15,
-    AppAssets.images.bank16,
-    AppAssets.images.bank17,
-    AppAssets.images.bank18,
-    AppAssets.images.bank19,
-  ];
-
   @override
   Widget build(BuildContext context) {
     var currentState = context.read<MainAppState>();
@@ -80,8 +58,8 @@ class _HomePageState extends State<HomePage> {
           (index) => Column(
             children: [
               BankContainer(
-                image: bankImages[index],
-                name: data[index].bankName!,
+                image: data[index].bank!.image!,
+                name: data[index].bank!.name!,
                 buyPrice: data[index].buy!,
                 sellPrice: data[index].sell!,
               ),
