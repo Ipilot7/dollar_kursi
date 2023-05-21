@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.2.3
+  path_provider: ^2.0.15
   flutter_svg: ^2.0.5
   provider: ^6.0.5
   http: ^0.13.6
@@ -18,7 +19,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator: ^2.0.0
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.4
 
 flutter:
   uses-material-design: true

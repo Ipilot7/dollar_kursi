@@ -1,6 +1,14 @@
+import 'package:hive/hive.dart';
+
+part 'bank_model.g.dart';
+
+@HiveType(typeId: 0)
 class BankModel {
+  @HiveField(0)
   Bank? bank;
+  @HiveField(1)
   int? buy;
+  @HiveField(2)
   int? sell;
 
   BankModel({this.bank, this.buy, this.sell});
@@ -22,9 +30,13 @@ class BankModel {
   }
 }
 
+@HiveType(typeId: 1)
 class Bank {
+  @HiveField(0)
   String? name;
+  @HiveField(1)
   String? slug;
+  @HiveField(2)
   String? image;
 
   Bank({this.name, this.slug, this.image});

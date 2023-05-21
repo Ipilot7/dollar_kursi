@@ -50,4 +50,6 @@ class AppIcons extends AssetsFolder {
 
 class AppImages extends AssetsFolder {
   AppImages() : super('assets/images');
+
+  String get noImage => '$basePath/no-image.png';
 }

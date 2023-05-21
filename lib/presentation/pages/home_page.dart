@@ -5,6 +5,7 @@ import 'package:dollar_kursi/utils/app_colors.dart';
 import 'package:dollar_kursi/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/app_assets.dart';
@@ -20,7 +21,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var currentState = context.read<MainAppState>();
-    List<BankModel> data = currentState.allBanks;
+    var box = Hive.box('banks');
+    List<BankModel> data = box.values.toList().cast();
 
     return ListView(
       children: [
