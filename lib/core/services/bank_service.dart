@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:dollar_kursi/core/models/bank_model.dart';
 import 'package:http/http.dart';
+
+import '../models/bank_model.dart';
 
 class BankService {
   static Future<List<BankModel>> getBanks() async {

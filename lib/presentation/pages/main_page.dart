@@ -1,4 +1,3 @@
-import 'package:dollar_kursi/presentation/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import '../../core/provider/main_state.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../widgets/sort_item.dart';
+import '../widgets/drawer.dart';
 import 'settings_page.dart';
 import 'home_page.dart';
 

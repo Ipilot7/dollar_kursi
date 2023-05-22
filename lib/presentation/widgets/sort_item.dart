@@ -1,9 +1,9 @@
-import 'package:dollar_kursi/core/provider/main_state.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../core/provider/main_state.dart';
 import '../../utils/app_text_styles.dart';
 import '../../utils/app_colors.dart';
 

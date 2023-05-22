@@ -1,13 +1,14 @@
-import 'package:dollar_kursi/core/models/bank_model.dart';
-import 'package:dollar_kursi/core/provider/main_state.dart';
-import 'package:dollar_kursi/presentation/widgets/bank_container.dart';
-import 'package:dollar_kursi/utils/app_colors.dart';
-import 'package:dollar_kursi/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 
+import 'package:provider/provider.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../core/provider/main_state.dart';
+import '../../core/models/bank_model.dart';
+import '../../utils/app_text_styles.dart';
+import '../widgets/bank_container.dart';
 import '../../utils/app_assets.dart';
+import '../../utils/app_colors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

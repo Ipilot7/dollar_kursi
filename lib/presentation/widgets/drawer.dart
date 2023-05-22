@@ -1,7 +1,7 @@
-import 'package:dollar_kursi/utils/app_colors.dart';
-import 'package:dollar_kursi/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/app_text_styles.dart';
+import '../../utils/app_colors.dart';
 import 'drawer_button.dart';
 
 class AppDrawer extends StatelessWidget {

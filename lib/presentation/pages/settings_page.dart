@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../utils/app_text_styles.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/app_text_styles.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
