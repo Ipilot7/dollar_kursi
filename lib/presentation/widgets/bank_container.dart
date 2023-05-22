@@ -42,6 +42,7 @@ class BankContainer extends StatelessWidget {
                 placeholder: (context, url) {
                   return Image.asset(AppAssets.images.noImage);
                 },
+                errorWidget: (context, url, error) => Image.asset(AppAssets.images.noImage),
               ),
             ),
             Text(

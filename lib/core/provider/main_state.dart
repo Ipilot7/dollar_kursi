@@ -6,11 +6,11 @@ import '../models/bank_model.dart';
 
 class MainAppState extends ChangeNotifier {
   int selectedIndex = 0;
-  var box = Hive.box('banks');
+  int sortIndex = 0;
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
-
   List<BankModel> allBanks = [];
+  var box = Hive.box('banks');
 
   MainAppState() {
     getBanks();
@@ -23,12 +23,12 @@ class MainAppState extends ChangeNotifier {
 
   void getBanks() async {
     allBanks = await BankService.getBanks();
-    box.isEmpty ? addBox() : null;
+    box.isEmpty ? addBox(allBanks) : null;
     notifyListeners();
   }
 
-  void addBox() {
-    for (var element in allBanks) {
+  void addBox(List<BankModel> elements) {
+    for (var element in elements) {
       box.add(
         BankModel(
           bank: element.bank,
@@ -36,6 +36,30 @@ class MainAppState extends ChangeNotifier {
           sell: element.sell,
         ),
       );
+    }
+  }
+
+  void changeSortIndex(int index) {
+    sortIndex = index;
+    sortDatas();
+    notifyListeners();
+  }
+
+  void sortDatas() {
+    List<BankModel> data = box.values.toList().cast();
+
+    switch (sortIndex) {
+      case 0:
+        data.sort((a, b) => a.bank!.name!.compareTo(b.bank!.name!));
+        break;
+      case 1:
+        data.sort((a, b) => b.buy!.compareTo(a.buy!));
+        break;
+      case 2:
+        data.sort((a, b) => a.sell!.compareTo(b.sell!));
+        break;
+      default:
+        data.sort((a, b) => a.bank!.name!.compareTo(b.bank!.name!));
     }
   }
 }

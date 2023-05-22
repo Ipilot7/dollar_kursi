@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var currentState = context.read<MainAppState>();
+
     List<BankModel> data = currentState.box.values.toList().cast();
 
     return ListView(
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
           (index) => Column(
             children: [
               BankContainer(
-                image: data[index].bank!.image!,
+                image: 'http://13.53.144.174/${data[index].bank!.image}',
                 name: data[index].bank!.name!,
                 buyPrice: data[index].buy!,
                 sellPrice: data[index].sell!,
