@@ -1,4 +1,4 @@
-package com.example.dollar_kursi
+package com.valleycoders.dollarkursi
 
 import io.flutter.embedding.android.FlutterActivity
 

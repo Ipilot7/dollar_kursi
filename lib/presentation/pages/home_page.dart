@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           (index) => Column(
             children: [
               BankContainer(
-                image: 'http://13.53.144.174/${data[index].bank!.image}',
+                image: 'http://13.53.144.174${data[index].bank!.image}',
                 name: data[index].bank!.name!,
                 buyPrice: data[index].buy!,
                 sellPrice: data[index].sell!,

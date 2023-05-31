@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../utils/app_assets.dart';
-import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 
 class BankContainer extends StatelessWidget {
@@ -36,14 +35,17 @@ class BankContainer extends StatelessWidget {
               width: 56,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.secondarySurface),
+                border: Border.all(color: Colors.red),
               ),
-              child: CachedNetworkImage(
-                imageUrl: image,
-                placeholder: (context, url) {
-                  return Image.asset(AppAssets.images.noImage);
-                },
-                errorWidget: (context, url, error) => Image.asset(AppAssets.images.noImage),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: CachedNetworkImage(
+                  imageUrl: image,
+                  placeholder: (context, url) {
+                    return Image.asset(AppAssets.images.noImage);
+                  },
+                  errorWidget: (context, url, error) => Image.asset(AppAssets.images.noImage),
+                ),
               ),
             ),
             Text(

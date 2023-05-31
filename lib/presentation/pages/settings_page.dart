@@ -1,3 +1,4 @@
+import 'package:dollar_kursi/presentation/widgets/coming_soon.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,7 +69,12 @@ class SettingsPage extends StatelessWidget {
               horizontal: 16,
               vertical: 2,
             ),
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const ComingSoonDialog(),
+              );
+            },
             leading: SvgPicture.asset(icons[index]),
             title: Text(
               titles[index],
