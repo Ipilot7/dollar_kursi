@@ -1,14 +1,14 @@
+import 'package:dollar_kursi/core/bloc/exchange_rate_bloc.dart';
 import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 
 import 'presentation/pages/main_page.dart';
 import 'presentation/themes/light.dart';
-import 'core/provider/main_state.dart';
 import 'utils/app_colors.dart';
 
 void main() async {
@@ -23,10 +23,8 @@ void main() async {
   await Hive.openBox('banks');
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => MainAppState()),
-      ],
+    BlocProvider(
+      create: (_) => ExchangeRateBloc()..add(LoadBanks()),
       child: const MainApp(),
     ),
   );
