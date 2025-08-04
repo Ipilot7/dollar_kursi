@@ -18,62 +18,70 @@ class HomePage extends StatelessWidget {
     return BlocBuilder<ExchangeRateBloc, ExchangeRateState>(
       builder: (context, state) {
         final banks = state.banks;
-
-        return ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: SearchBar(
-                hintText: 'Qidirmoq',
-                leading: IconButton(
-                  onPressed: () => scaffoldKey.currentState?.openDrawer(),
-                  icon: SvgPicture.asset(AppAssets.icons.drawer),
-                ),
-                trailing: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: SvgPicture.asset(AppAssets.icons.search),
-                  ),
-                ],
-                onChanged:
-                    (value) => context.read<ExchangeRateBloc>().add(
-                      SearchQueryChanged(value),
-                    ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Bugun - 19.05.2023 (10:00)',
-                style: AppTextStyles.pageTitle.copyWith(fontSize: 18),
-              ),
-            ),
-            const SizedBox(height: 10),
-            if (banks.isEmpty)
-              const Center(child: Text('Hech qanday natija topilmadi')),
-            ListView.separated(
+        return BlocBuilder<ExchangeRateBloc, ExchangeRateState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            }
+            return ListView(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: banks.length,
-              itemBuilder: (_, index) {
-                final item = banks[index];
-                return BankContainer(
-                  image: item.bank!.image ?? '',
-                  name: item.bank!.name!,
-                  buyPrice: item.buy!,
-                  sellPrice: item.sell!,
-                );
-              },
-              separatorBuilder:
-                  (_, __) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Divider(
-                      color: AppColors.secondarySurface,
-                      height: 8,
-                    ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
                   ),
-            ),
-          ],
+                  child: SearchBar(
+                    hintText: 'Qidirmoq',
+                    leading: IconButton(
+                      onPressed: () => scaffoldKey.currentState?.openDrawer(),
+                      icon: SvgPicture.asset(AppAssets.icons.drawer),
+                    ),
+                    trailing: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: SvgPicture.asset(AppAssets.icons.search),
+                      ),
+                    ],
+                    onChanged:
+                        (value) => context.read<ExchangeRateBloc>().add(
+                          SearchQueryChanged(value),
+                        ),
+                  ),
+                ),
+
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    state.lastUpdate,
+                    style: AppTextStyles.pageTitle.copyWith(fontSize: 18),
+                  ),
+                ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: banks.length,
+                  itemBuilder: (_, index) {
+                    final item = banks[index];
+                    return BankContainer(
+                      image: item.bank!.image ?? '',
+                      name: item.bank!.name!,
+                      buyPrice: item.buy!,
+                      sellPrice: item.sell!,
+                    );
+                  },
+                  separatorBuilder:
+                      (_, __) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Divider(
+                          color: AppColors.secondarySurface,
+                          height: 8,
+                        ),
+                      ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

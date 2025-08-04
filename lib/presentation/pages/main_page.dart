@@ -41,23 +41,10 @@ class _MainPageState extends State<MainPage> {
       body: BlocBuilder<ExchangeRateBloc, ExchangeRateState>(
         builder: (context, state) {
           return SafeArea(
-            child: Stack(
-              children: [
-                PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: pageController,
-                  children: const [HomePage(), SettingsPage()],
-                ),
-                if (state.isLoading)
-                  const Positioned.fill(
-                    child: ColoredBox(
-                      color: Colors.black12,
-                      child: Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    ),
-                  ),
-              ],
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageController,
+              children: const [HomePage(), SettingsPage()],
             ),
           );
         },
@@ -85,6 +72,7 @@ class _MainPageState extends State<MainPage> {
           );
         },
       ),
+
       floatingActionButton: BlocBuilder<ExchangeRateBloc, ExchangeRateState>(
         builder: (context, state) {
           return state.selectedIndex == 0
