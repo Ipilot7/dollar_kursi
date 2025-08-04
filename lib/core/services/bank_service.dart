@@ -1,24 +1,18 @@
 import 'dart:convert';
-
+import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
 import 'package:http/http.dart';
 
-import '../models/bank_model.dart';
-
 class BankService {
-  static Future<List<BankModel>> getBanks() async {
-    String baseUrl = "http://currency.bildung.uz/exchange/?format=json";
-    List<BankModel> allBanks = [];
+  static Future<ExchangeRatesModel> getBanks() async {
+    const String baseUrl = "http://currency.bildung.uz/exchange/?format=json";
 
-    Response res = await get(Uri.parse(baseUrl));
+    final Response res = await get(Uri.parse(baseUrl));
 
     if (res.statusCode == 200) {
-      allBanks = [
-        for (final item in jsonDecode(res.body)['data'])
-          BankModel.fromJson(item),
-      ];
-      return allBanks;
+      final data = jsonDecode(res.body);
+      return ExchangeRatesModel.fromJson(data);
     } else {
-      return [].cast<BankModel>();
+      throw Exception('Failed to load exchange rates: ${res.statusCode}');
     }
   }
 }

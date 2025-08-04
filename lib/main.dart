@@ -1,3 +1,4 @@
+import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,7 +9,6 @@ import 'package:hive/hive.dart';
 import 'presentation/pages/main_page.dart';
 import 'presentation/themes/light.dart';
 import 'core/provider/main_state.dart';
-import 'core/models/bank_model.dart';
 import 'utils/app_colors.dart';
 
 void main() async {
@@ -16,6 +16,7 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
 
   Hive.init(appDocumentDirectory.path);
+  Hive.registerAdapter(ExchangeRatesModelAdapter());
   Hive.registerAdapter(BankModelAdapter());
   Hive.registerAdapter(BankAdapter());
 

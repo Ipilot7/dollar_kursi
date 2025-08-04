@@ -1,16 +1,16 @@
+import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hive/hive.dart';
 
 import '../services/bank_service.dart';
-import '../models/bank_model.dart';
 
 class MainAppState extends ChangeNotifier {
   int selectedIndex = 0;
   int sortIndex = 0;
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
-  List<BankModel> allBanks = [];
+  List<ExchangeRatesModel> allBanks = [];
   var box = Hive.box('banks');
 
   String _searchQuery = '';
@@ -26,9 +26,9 @@ class MainAppState extends ChangeNotifier {
   }
 
   void getBanks() async {
-    allBanks = await BankService.getBanks();
+    ExchangeRatesModel exchangeRate = await BankService.getBanks();
     await box.clear();
-    if (box.isEmpty) addBox(allBanks);
+    if (box.isEmpty) addBox(exchangeRate.data ?? []);
     notifyListeners();
   }
 
