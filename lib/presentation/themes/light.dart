@@ -23,9 +23,7 @@ ThemeData lightTheme() {
       backgroundColor: AppColors.primaryContainer,
     ),
     searchBarTheme: SearchBarThemeData(
-      backgroundColor: MaterialStatePropertyAll(
-        AppColors.secondarySurface,
-      ),
+      backgroundColor: MaterialStatePropertyAll(AppColors.secondarySurface),
       elevation: const MaterialStatePropertyAll(0),
       hintStyle: MaterialStatePropertyAll(
         TextStyle(

@@ -49,7 +49,6 @@ class HomePage extends StatelessWidget {
                         ),
                   ),
                 ),
-
                 Align(
                   alignment: Alignment.center,
                   child: Text(
