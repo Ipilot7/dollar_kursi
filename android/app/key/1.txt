@@ -1,0 +1,10 @@
+keytool -genkeypair -v \
+  -keystore kurs-key.jks \
+  -alias upload \
+  -keyalg RSA \
+  -keysize 2048 \
+  -validity 10000 \
+  -storetype JKS \
+  -storepass "StrongStorePass09082025" \
+  -keypass "StrongKeyPass09082025" \
+  -dname "CN=DollarKursi, OU=Dev, O=SimplSolutions, L=Fergana, ST=Fergana, C=UZ"

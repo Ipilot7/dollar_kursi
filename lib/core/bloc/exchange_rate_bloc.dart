@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
-import 'package:dollar_kursi/core/services/bank_service.dart';
 import 'package:equatable/equatable.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 part 'exchange_rate_event.dart';
@@ -20,13 +21,26 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
   void _onLoadBanks(LoadBanks event, Emitter<ExchangeRateState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final response = await BankService.getBanks();
+      final response = await getBanks();
       List<BankModel> list = response.data ?? [];
       final date = formatDate(response.lastDate ?? '');
       emit(state.copyWith(banks: list, isLoading: false, lastUpdate: date));
     } catch (e) {
       emit(state.copyWith(isLoading: false));
       log('Ошибка загрузки курсов валют: $e');
+    }
+  }
+
+  Future<ExchangeRatesModel> getBanks() async {
+    const String baseUrl = "http://currency.bildung.uz/exchange/?format=json";
+
+    final Response res = await get(Uri.parse(baseUrl));
+
+    if (res.statusCode == 200) {
+      final data = jsonDecode(res.body);
+      return ExchangeRatesModel.fromJson(data);
+    } else {
+      throw Exception('Failed to load exchange rates: ${res.statusCode}');
     }
   }
 
