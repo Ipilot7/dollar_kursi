@@ -5,6 +5,7 @@ class ExchangeRateState {
   final int sortIndex;
   final String searchQuery;
   final List<BankModel> banks;
+  final List<BankModel> allBanks;
   final String lastUpdate;
   final bool isLoading;
 
@@ -13,6 +14,7 @@ class ExchangeRateState {
     this.sortIndex = 0,
     this.searchQuery = '',
     this.banks = const [],
+    this.allBanks = const [],
     this.isLoading = false,
     this.lastUpdate = '',
   });
@@ -22,6 +24,7 @@ class ExchangeRateState {
     int? sortIndex,
     String? searchQuery,
     List<BankModel>? banks,
+    List<BankModel>? allBanks,
     bool? isLoading,
     String? lastUpdate,
   }) {
@@ -30,6 +33,7 @@ class ExchangeRateState {
       sortIndex: sortIndex ?? this.sortIndex,
       searchQuery: searchQuery ?? this.searchQuery,
       banks: banks ?? this.banks,
+      allBanks: allBanks ?? this.allBanks,
       isLoading: isLoading ?? this.isLoading,
       lastUpdate: lastUpdate ?? this.lastUpdate,
     );

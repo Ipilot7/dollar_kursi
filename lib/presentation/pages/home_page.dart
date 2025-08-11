@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                     ],
                     onChanged:
                         (value) => context.read<ExchangeRateBloc>().add(
-                          SearchQueryChanged(value),
+                      SearchQueryChanged(value),
                         ),
                   ),
                 ),

@@ -18,13 +18,60 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     on<SearchQueryChanged>(_onSearchQueryChanged);
   }
 
+  // ---------- helpers ----------
+  List<BankModel> _applySearch(List<BankModel> source, String query) {
+    final q = query.trim().toLowerCase();
+    if (q.isEmpty) return List<BankModel>.from(source);
+
+    return source.where((b) {
+      final name = (b.bank?.name ?? '').toLowerCase();
+      // при желании можно добавить и другие поля в фильтр
+      return name.contains(q);
+    }).toList();
+  }
+
+  int _cmpNumDesc(num? a, num? b) => (b ?? 0).compareTo(a ?? 0);
+  int _cmpNumAsc(num? a, num? b) => (a ?? 0).compareTo(b ?? 0);
+
+  List<BankModel> _applySort(List<BankModel> list, int sortIndex) {
+    final sorted = List<BankModel>.from(list);
+    switch (sortIndex) {
+      case 0: // по названию банка A->Z
+        sorted.sort((a, b) => (a.bank?.name ?? '').compareTo(b.bank?.name ?? ''));
+        break;
+      case 1: // buy по убыванию
+        sorted.sort((a, b) => _cmpNumDesc(a.buy, b.buy));
+        break;
+      case 2: // sell по возрастанию
+        sorted.sort((a, b) => _cmpNumAsc(a.sell, b.sell));
+        break;
+    }
+    return sorted;
+  }
+
+  void _rebuildView(Emitter<ExchangeRateState> emit,
+      {List<BankModel>? newAll}) {
+    final base = newAll ?? state.allBanks;
+    final filtered = _applySearch(base, state.searchQuery);
+    final sorted = _applySort(filtered, state.sortIndex);
+    emit(state.copyWith(allBanks: newAll ?? state.allBanks, banks: sorted));
+  }
+  // ---------- /helpers ----------
+
   void _onLoadBanks(LoadBanks event, Emitter<ExchangeRateState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
       final response = await getBanks();
-      List<BankModel> list = response.data ?? [];
+      final list = response.data ?? <BankModel>[];
       final date = formatDate(response.lastDate ?? '');
-      emit(state.copyWith(banks: list, isLoading: false, lastUpdate: date));
+
+      // сохраняем в allBanks, видимую витрину пересобираем с поиском/сортировкой
+      emit(state.copyWith(
+        isLoading: false,
+        lastUpdate: date,
+        allBanks: list,
+      ));
+      _rebuildView(emit); // banks = filtered+sorted
     } catch (e) {
       emit(state.copyWith(isLoading: false));
       log('Ошибка загрузки курсов валют: $e');
@@ -33,9 +80,7 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
 
   Future<ExchangeRatesModel> getBanks() async {
     const String baseUrl = "http://currency.bildung.uz/exchange/?format=json";
-
     final Response res = await get(Uri.parse(baseUrl));
-
     if (res.statusCode == 200) {
       final data = jsonDecode(res.body);
       return ExchangeRatesModel.fromJson(data);
@@ -58,20 +103,9 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     ChangeSortIndex event,
     Emitter<ExchangeRateState> emit,
   ) {
-    List<BankModel> sorted = List.from(state.banks);
-
-    switch (event.index) {
-      case 0:
-        sorted.sort((a, b) => a.bank!.name!.compareTo(b.bank!.name!));
-        break;
-      case 1:
-        sorted.sort((a, b) => b.buy!.compareTo(a.buy!));
-        break;
-      case 2:
-        sorted.sort((a, b) => a.sell!.compareTo(b.sell!));
-        break;
-    }
-
+    // сортируем поверх текущего фильтра
+    final filtered = _applySearch(state.allBanks, state.searchQuery);
+    final sorted = _applySort(filtered, event.index);
     emit(state.copyWith(sortIndex: event.index, banks: sorted));
   }
 
@@ -79,6 +113,9 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     SearchQueryChanged event,
     Emitter<ExchangeRateState> emit,
   ) {
-    emit(state.copyWith(searchQuery: event.query));
+    // фильтруем по исходному списку, потом применяем активную сортировку
+    final filtered = _applySearch(state.allBanks, event.query);
+    final sorted = _applySort(filtered, state.sortIndex);
+    emit(state.copyWith(searchQuery: event.query, banks: sorted));
   }
 }
