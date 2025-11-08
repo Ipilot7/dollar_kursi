@@ -1,4 +1,4 @@
-import 'package:dollar_kursi/core/bloc/exchange_rate_bloc.dart';
+import 'package:dollar_kursi/core/blocs/exchange_rate_bloc/exchange_rate_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,7 +36,6 @@ class _MainPageState extends State<MainPage> {
     final bloc = context.read<ExchangeRateBloc>();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       drawer: const AppDrawer(),
       body: BlocBuilder<ExchangeRateBloc, ExchangeRateState>(
         builder: (context, state) {

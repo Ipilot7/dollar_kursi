@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:dollar_kursi/di/di.dart';
+import 'package:dollar_kursi/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:dollar_kursi/firebase_options.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// 🔔 Сервис для работы с Firebase Cloud Messaging
 class PushNotificationService {
@@ -16,33 +19,33 @@ class PushNotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
+  final _sl = GetIt.instance;
+
+  static const _prefKey = 'notifications_enabled';
 
   /// 🚀 Основная инициализация Firebase и уведомлений
   Future<void> init() async {
-    // 🔐 Запрашиваем разрешения (особенно важно для iOS и Android 13+)
     await _requestPermissions();
+    await _initLocalNotifications();
 
-    // ⚙️ Настройка локальных уведомлений (Android + iOS)
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosInit = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-    const initSettings = InitializationSettings(
-      android: androidInit,
-      iOS: iosInit,
-    );
-    await _localNotifications.initialize(initSettings);
+    // Читаем состояние пользователя из SharedPreferences
+    final prefs = _sl<SharedPreferences>();
+    final enabled = prefs.getBool(_prefKey) ?? true;
 
-    // 💬 Для iOS: показывать уведомления в foreground
+    if (enabled) {
+      await _ensureNotificationsActive();
+    } else {
+      debugPrint('🔕 Пользователь ранее отключил уведомления');
+    }
+
+    // 💬 Разрешить отображение уведомлений при активном приложении (iOS)
     await _firebaseMessaging.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
 
-    // 🧠 Подключаем обработчики
+    // 🧠 Обработчики сообщений
     FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
     FirebaseMessaging.onMessage.listen(_onMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
@@ -50,60 +53,98 @@ class PushNotificationService {
     // 🚀 Проверяем, было ли приложение открыто через пуш при старте
     await _checkInitialMessage();
 
-    // 🔥 Токен устройства
-    await getDeviceToken();
-
-    // ♻️ Слушаем обновления токена
+    // ♻️ Следим за обновлением токена
     listenTokenRefresh();
 
     debugPrint('✅ PushNotificationService инициализирован');
   }
 
   // ---------------------------------------------------------------------------
-  // 📦 --- Получение токена устройства ---
-  Future<String?> getDeviceToken() async {
-    // final localDatasource = AuthLocaleDataSourceImpl();
-    // Wait for iOS registration
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      final apnsToken = await _firebaseMessaging.getAPNSToken();
-      if (apnsToken == null) {
-        debugPrint('⚠️ APNs token not yet available. Waiting...');
-        // small delay to give iOS time
-        await Future.delayed(const Duration(seconds: 2));
-      }
-    }
+  // 📩 --- Получение и обновление токена ---
+  // Future<String?> getDeviceToken() async {
+  //   if (defaultTargetPlatform == TargetPlatform.iOS) {
+  //     final apnsToken = await _firebaseMessaging.getAPNSToken();
+  //     if (apnsToken == null) {
+  //       await Future.delayed(const Duration(seconds: 2));
+  //     }
+  //   }
 
-    final token = await _firebaseMessaging.getToken();
-    debugPrint('🔥 FCM токен устройства: $token');
-    if (token != null) {
-      // localDatasource.setString(Keys.fcmToken, token);
-    }
-    return token;
-  }
+  //   final token = await _firebaseMessaging.getToken();
+  //   debugPrint('🔥 Токен устройства: $token');
+  //   return token;
+  // }
 
-  // ---------------------------------------------------------------------------
-  // 🔄 --- Обновление токена ---
   void listenTokenRefresh() {
     _firebaseMessaging.onTokenRefresh.listen((newToken) {
-      debugPrint('♻️ Обновлён FCM токен: $newToken');
-      // 👉 можно обновить токен на сервере
+      debugPrint('♻️ Обновлён FCM-токен: $newToken');
+      // тут можно обновить токен на сервере
     });
   }
 
   // ---------------------------------------------------------------------------
-  // 📩 --- Фоновая обработка ---
+  // 🔔 --- Включение уведомлений ---
+  Future<void> enableNotifications({bool save = true}) async {
+    try {
+      final prefs = _sl<SharedPreferences>();
+      final settings = await _firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        final token = await _firebaseMessaging.getToken();
+        await _firebaseMessaging.subscribeToTopic('general');
+        debugPrint('✅ Уведомления включены, токен: $token');
+        if (save) prefs.setBool(_prefKey, true);
+      } else {
+        debugPrint('⚠️ Пользователь не дал разрешение на уведомления');
+      }
+    } catch (e) {
+      debugPrint('Ошибка при включении уведомлений: $e');
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 🔕 --- Отключение уведомлений ---
+  Future<void> disableNotifications({bool save = true}) async {
+    try {
+      final prefs = _sl<SharedPreferences>();
+      debugPrint('🔕 Отключаем уведомления...');
+      await _firebaseMessaging.unsubscribeFromTopic('general');
+      await _firebaseMessaging.deleteToken();
+      if (save) prefs.setBool(_prefKey, false);
+      debugPrint('🚫 Уведомления отключены');
+    } catch (e) {
+      debugPrint('Ошибка при отключении уведомлений: $e');
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 🔄 --- Активация при старте (если включено в настройках) ---
+  Future<void> _ensureNotificationsActive() async {
+    final token = await _firebaseMessaging.getToken();
+    if (token == null) {
+      await enableNotifications(save: false);
+    } else {
+      await _firebaseMessaging.subscribeToTopic('general');
+      debugPrint('📡 Уведомления активны, токен: $token');
+      await sl<SharedPreferences>().setString("fcm_token", token);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 📬 --- Сообщения ---
   @pragma('vm:entry-point')
   static Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    debugPrint('🔔 Получено уведомление в фоне: ${message.messageId}');
+    debugPrint('🔔 Уведомление в фоне: ${message.messageId}');
   }
 
-  // ---------------------------------------------------------------------------
-  // 📬 --- Уведомление в активном приложении ---
   Future<void> _onMessage(RemoteMessage message) async {
-    debugPrint('📩 Получено сообщение: ${message.notification?.title}');
+    debugPrint('📩 Входящее сообщение: ${message.notification?.title}');
     final notification = message.notification;
 
     if (notification != null) {
@@ -124,25 +165,33 @@ class PushNotificationService {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // 📲 --- Клик по уведомлению ---
   void _onMessageOpenedApp(RemoteMessage message) {
     debugPrint('📲 Пользователь открыл уведомление: ${message.data}');
-    // 👉 Здесь можно вызвать навигацию через navigatorKey
   }
 
-  // ---------------------------------------------------------------------------
-  // 🚀 --- Проверка initial message (если приложение открыто через пуш) ---
   Future<void> _checkInitialMessage() async {
     final message = await _firebaseMessaging.getInitialMessage();
     if (message != null) {
       debugPrint('🚀 Приложение открыто через пуш: ${message.data}');
-      // 👉 можно сразу навигировать на нужный экран
     }
   }
 
   // ---------------------------------------------------------------------------
-  // 🔐 --- Запрос разрешений ---
+  // ⚙️ --- Локальные уведомления и разрешения ---
+  Future<void> _initLocalNotifications() async {
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosInit = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+    const initSettings = InitializationSettings(
+      android: androidInit,
+      iOS: iosInit,
+    );
+    await _localNotifications.initialize(initSettings);
+  }
+
   Future<void> _requestPermissions() async {
     final settings = await _firebaseMessaging.requestPermission(
       alert: true,
@@ -151,17 +200,5 @@ class PushNotificationService {
       provisional: false,
     );
     debugPrint('🔐 Статус разрешений: ${settings.authorizationStatus}');
-  }
-
-  // ---------------------------------------------------------------------------
-  // 📡 --- Подписка и отписка от топиков ---
-  Future<void> subscribeToTopic(String topic) async {
-    await _firebaseMessaging.subscribeToTopic(topic);
-    debugPrint('📡 Подписан на топик: $topic');
-  }
-
-  Future<void> unsubscribeFromTopic(String topic) async {
-    await _firebaseMessaging.unsubscribeFromTopic(topic);
-    debugPrint('🚫 Отписан от топика: $topic');
   }
 }

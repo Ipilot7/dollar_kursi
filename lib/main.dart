@@ -1,39 +1,16 @@
-import 'package:dollar_kursi/core/bloc/exchange_rate_bloc.dart';
-import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
-import 'package:dollar_kursi/firebase_options.dart';
-import 'package:dollar_kursi/utils/push_notification_service.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:dollar_kursi/core/blocs/exchange_rate_bloc/exchange_rate_bloc.dart';
+import 'package:dollar_kursi/core/blocs/theme/theme_cubit.dart';
+import 'package:dollar_kursi/di/di.dart';
+import 'package:dollar_kursi/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:path_provider/path_provider.dart';
-import 'package:hive/hive.dart';
-
 import 'presentation/pages/main_page.dart';
-import 'presentation/themes/light.dart';
-import 'utils/app_colors.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initDependencies();
 
-  await PushNotificationService().init();
-  final appDocumentDirectory = await getApplicationDocumentsDirectory();
-
-  Hive.init(appDocumentDirectory.path);
-  Hive.registerAdapter(ExchangeRatesModelAdapter());
-  Hive.registerAdapter(BankModelAdapter());
-  Hive.registerAdapter(BankAdapter());
-
-  await Hive.openBox('banks');
-
-  runApp(
-    BlocProvider(
-      create: (_) => ExchangeRateBloc()..add(LoadBanks()),
-      child: const MainApp(),
-    ),
-  );
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -42,17 +19,36 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         systemNavigationBarColor: AppColors.primarySurface,
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: AppColors.background,
       ),
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const MainPage(),
-      theme: lightTheme(),
+    // Тянем ThemeCubit и ExchangeRateBloc через MultiBlocProvider
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<ThemeCubit>()),
+        BlocProvider(
+          create:
+              (_) =>
+                  sl<ExchangeRateBloc>()
+                    ..add(LoadBanks())
+                    ..add(SetDeivceAndFCM()),
+        ),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: state.themeData,
+            darkTheme: state.darkThemeData,
+            themeMode: state.themeMode,
+            home: const MainPage(),
+          );
+        },
+      ),
     );
   }
 }

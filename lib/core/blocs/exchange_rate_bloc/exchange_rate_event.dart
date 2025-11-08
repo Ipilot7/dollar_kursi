@@ -32,3 +32,8 @@ class SearchQueryChanged extends ExchangeRateEvent {
   @override
   List<Object> get props => [query];
 }
+
+class SetDeivceAndFCM extends ExchangeRateEvent {
+  @override
+  List<Object> get props => [];
+}

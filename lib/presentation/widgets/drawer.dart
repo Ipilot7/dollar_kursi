@@ -18,49 +18,25 @@ class AppDrawer extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 18, 0, 18),
-              child: Text(
-                'Dollar kursi',
-                style: AppTextStyles.pageTitle,
-              ),
+              child: Text('Dollar kursi', style: AppTextStyles.pageTitle),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 18, 0, 18),
-              child: Text(
-                'Asosiy',
-                style: AppTextStyles.button,
-              ),
+              child: Text('Asosiy', style: AppTextStyles.button),
             ),
-            const DrawerEButton(
-              title: 'Bosh sahifa',
-              isActive: true,
-            ),
-            const DrawerEButton(
-              title: 'Yangiliklar',
-              isActive: false,
-            ),
-            const DrawerEButton(
-              title: 'Bildirishnomalar',
-              isActive: false,
-            ),
+            const DrawerEButton(title: 'Bosh sahifa', isActive: true),
+            const DrawerEButton(title: 'Yangiliklar', isActive: false),
+            const DrawerEButton(title: 'Bildirishnomalar', isActive: false),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Divider(color: Color(0xFFCAC4D0)),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 18, 0, 18),
-              child: Text(
-                'Ilova haqida',
-                style: AppTextStyles.button,
-              ),
+              child: Text('Ilova haqida', style: AppTextStyles.button),
             ),
-            const DrawerEButton(
-              title: 'Qo\'llanma',
-              isActive: false,
-            ),
-            const DrawerEButton(
-              title: 'Joriy versiya',
-              isActive: false,
-            ),
+            const DrawerEButton(title: 'Qo\'llanma', isActive: false),
+            const DrawerEButton(title: 'Joriy versiya', isActive: false),
           ],
         ),
       ),

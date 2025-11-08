@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dollar_kursi/core/models/device_model.dart';
 import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
+import 'package:dollar_kursi/di/di.dart';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'exchange_rate_event.dart';
 part 'exchange_rate_state.dart';
@@ -16,6 +21,7 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     on<ChangePage>(_onChangePage);
     on<ChangeSortIndex>(_onChangeSortIndex);
     on<SearchQueryChanged>(_onSearchQueryChanged);
+    on<SetDeivceAndFCM>(_setDeivceAndFCM);
   }
 
   // ---------- helpers ----------
@@ -37,7 +43,9 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     final sorted = List<BankModel>.from(list);
     switch (sortIndex) {
       case 0: // по названию банка A->Z
-        sorted.sort((a, b) => (a.bank?.name ?? '').compareTo(b.bank?.name ?? ''));
+        sorted.sort(
+          (a, b) => (a.bank?.name ?? '').compareTo(b.bank?.name ?? ''),
+        );
         break;
       case 1: // buy по убыванию
         sorted.sort((a, b) => _cmpNumDesc(a.buy, b.buy));
@@ -49,8 +57,10 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     return sorted;
   }
 
-  void _rebuildView(Emitter<ExchangeRateState> emit,
-      {List<BankModel>? newAll}) {
+  void _rebuildView(
+    Emitter<ExchangeRateState> emit, {
+    List<BankModel>? newAll,
+  }) {
     final base = newAll ?? state.allBanks;
     final filtered = _applySearch(base, state.searchQuery);
     final sorted = _applySort(filtered, state.sortIndex);
@@ -66,11 +76,7 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
       final date = formatDate(response.lastDate ?? '');
 
       // сохраняем в allBanks, видимую витрину пересобираем с поиском/сортировкой
-      emit(state.copyWith(
-        isLoading: false,
-        lastUpdate: date,
-        allBanks: list,
-      ));
+      emit(state.copyWith(isLoading: false, lastUpdate: date, allBanks: list));
       _rebuildView(emit); // banks = filtered+sorted
     } catch (e) {
       emit(state.copyWith(isLoading: false));
@@ -84,6 +90,34 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     if (res.statusCode == 200) {
       final data = jsonDecode(res.body);
       return ExchangeRatesModel.fromJson(data);
+    } else {
+      throw Exception('Failed to load exchange rates: ${res.statusCode}');
+    }
+  }
+
+  Future<void> _setDeivceAndFCM(SetDeivceAndFCM event, emit) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      await device();
+
+      emit(state.copyWith(isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false));
+      log('Ошибка выгрузки токена: $e');
+    }
+  }
+
+  Future<DeviceModel> device() async {
+    final String? deviceId = await getDeviceId();
+    final String? fvmToken = sl<SharedPreferences>().getString('fcm_token');
+    const String baseUrl = "http://currency.bildung.uz/devices/";
+    final Response res = await post(
+      Uri.parse(baseUrl),
+      body: {"device_id": deviceId, "fcm_token": fvmToken},
+    );
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      final data = jsonDecode(res.body);
+      return DeviceModel.fromJson(data);
     } else {
       throw Exception('Failed to load exchange rates: ${res.statusCode}');
     }
@@ -117,5 +151,20 @@ class ExchangeRateBloc extends Bloc<ExchangeRateEvent, ExchangeRateState> {
     final filtered = _applySearch(state.allBanks, event.query);
     final sorted = _applySort(filtered, state.sortIndex);
     emit(state.copyWith(searchQuery: event.query, banks: sorted));
+  }
+
+  Future<String?> getDeviceId() async {
+    final deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      final info = await deviceInfo.androidInfo;
+      return info
+          .id; // Уникальный для устройства, но не гарантированно постоянный
+    } else if (Platform.isIOS) {
+      final info = await deviceInfo.iosInfo;
+      return info
+          .identifierForVendor; // Apple выдаёт уникальный ID для разработчика
+    }
+    return null;
   }
 }
