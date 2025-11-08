@@ -1,103 +1,43 @@
 import 'package:flutter/material.dart';
-import '../app_colors.dart';
 
 class AppTheme {
-  AppTheme._(); // приватный конструктор — чтобы никто не создавал экземпляр
+  AppTheme._();
 
   static ThemeData light() {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.light,
-      primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.primarySurface,
-      navigationBarTheme: NavigationBarThemeData(
-        labelTextStyle: const MaterialStatePropertyAll(
-          TextStyle(
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Roboto',
-            fontSize: 12,
-          ),
-        ),
-        backgroundColor: AppColors.primarySurface,
-        indicatorColor: AppColors.primaryContainer,
+    final base = ThemeData.light(useMaterial3: true);
+    return base.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF0066FF),
+        brightness: Brightness.light,
+      ),
+      scaffoldBackgroundColor: Colors.white,
+      dividerColor: Colors.grey.shade200,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
         elevation: 0,
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: AppColors.primaryContainer,
-      ),
-      searchBarTheme: SearchBarThemeData(
-        backgroundColor:
-            MaterialStatePropertyAll(AppColors.secondarySurface),
-        elevation: const MaterialStatePropertyAll(0),
-        hintStyle: MaterialStatePropertyAll(
-          TextStyle(
-            fontWeight: FontWeight.w400,
-            color: AppColors.onSurface60,
-            fontFamily: 'Roboto',
-            fontSize: 16,
-          ),
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor:
-              MaterialStatePropertyAll(AppColors.primaryContainer),
-          shadowColor:
-              const MaterialStatePropertyAll(Colors.transparent),
-          elevation: const MaterialStatePropertyAll(0),
-        ),
-      ),
+      cardColor: Colors.white,
+      textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.black87)),
     );
   }
 
   static ThemeData dark() {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      primaryColor: AppColors.primaryContainer,
-      scaffoldBackgroundColor: AppColors.surfaceDark,
-      navigationBarTheme: NavigationBarThemeData(
-        labelTextStyle: MaterialStatePropertyAll(
-          TextStyle(
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Roboto',
-            fontSize: 12,
-            color: AppColors.onPrimaryContainerDark,
-          ),
-        ),
-        backgroundColor: AppColors.surfaceDark,
-        indicatorColor: AppColors.primaryDark,
+    final base = ThemeData.dark(useMaterial3: true);
+    return base.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF0066FF),
+        brightness: Brightness.dark,
+      ),
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF121212),
+        foregroundColor: Colors.white,
         elevation: 0,
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: AppColors.onPrimaryDark,
-      ),
-      searchBarTheme: SearchBarThemeData(
-        backgroundColor:
-            MaterialStatePropertyAll(AppColors.secondarySurfaceDark),
-        elevation: const MaterialStatePropertyAll(0),
-        hintStyle: MaterialStatePropertyAll(
-          TextStyle(
-            fontWeight: FontWeight.w400,
-            color: AppColors.onSurface60Dark,
-            fontFamily: 'Roboto',
-            fontSize: 16,
-          ),
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(AppColors.primaryDark),
-          foregroundColor:
-              MaterialStatePropertyAll(AppColors.onPrimaryDark),
-          shadowColor:
-              const MaterialStatePropertyAll(Colors.transparent),
-          elevation: const MaterialStatePropertyAll(0),
-        ),
-      ),
-      cardColor: AppColors.surfaceContainerDark,
-      dividerColor: AppColors.onSurface12Dark,
+      cardColor: const Color(0xFF1E1E1E),
+      dividerColor: Colors.white12,
+      textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.white)),
     );
   }
 }

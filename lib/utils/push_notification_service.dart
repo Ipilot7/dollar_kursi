@@ -94,8 +94,11 @@ class PushNotificationService {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         final token = await _firebaseMessaging.getToken();
-        await _firebaseMessaging.subscribeToTopic('general');
+        await _firebaseMessaging.subscribeToTopic('ADS');
         debugPrint('✅ Уведомления включены, токен: $token');
+        if (token != null) {
+          await sl<SharedPreferences>().setString("fcm_token", token);
+        }
         if (save) prefs.setBool(_prefKey, true);
       } else {
         debugPrint('⚠️ Пользователь не дал разрешение на уведомления');
@@ -111,7 +114,7 @@ class PushNotificationService {
     try {
       final prefs = _sl<SharedPreferences>();
       debugPrint('🔕 Отключаем уведомления...');
-      await _firebaseMessaging.unsubscribeFromTopic('general');
+      await _firebaseMessaging.unsubscribeFromTopic('ADS');
       await _firebaseMessaging.deleteToken();
       if (save) prefs.setBool(_prefKey, false);
       debugPrint('🚫 Уведомления отключены');
@@ -127,7 +130,7 @@ class PushNotificationService {
     if (token == null) {
       await enableNotifications(save: false);
     } else {
-      await _firebaseMessaging.subscribeToTopic('general');
+      await _firebaseMessaging.subscribeToTopic('ADS');
       debugPrint('📡 Уведомления активны, токен: $token');
       await sl<SharedPreferences>().setString("fcm_token", token);
     }
