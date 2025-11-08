@@ -3,12 +3,14 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     id("org.jetbrains.kotlin.android")
-    // Flutter плагин должен идти после Android и Kotlin
+    // Flutter plugin должен идти после Android и Kotlin
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Чтение key.properties (если есть)
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
@@ -21,9 +23,12 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // ✅ Правильный синтаксис для Kotlin DSL:
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
@@ -48,23 +53,16 @@ android {
     }
 
     buildTypes {
-        release {
-            // Если key.properties отсутствует — падать не будем, подпишем debug-ключом (для локального билда)
+        getByName("release") {
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
             }
-
-            // Включай при необходимости:
             // isMinifyEnabled = true
             // isShrinkResources = true
-            // proguardFiles(
-            //     getDefaultProguardFile("proguard-android-optimize.txt"),
-            //     "proguard-rules.pro"
-            // )
         }
-        debug {
+        getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -72,4 +70,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
 }

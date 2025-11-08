@@ -1,5 +1,8 @@
 import 'package:dollar_kursi/core/bloc/exchange_rate_bloc.dart';
 import 'package:dollar_kursi/core/models/exchange_rates_model.dart';
+import 'package:dollar_kursi/firebase_options.dart';
+import 'package:dollar_kursi/utils/push_notification_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +16,9 @@ import 'utils/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await PushNotificationService().init();
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
 
   Hive.init(appDocumentDirectory.path);
