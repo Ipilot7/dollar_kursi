@@ -16,8 +16,9 @@ class _ConverterPageState extends State<ConverterPage> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _resultController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
-  
-  bool _isUsdToUzs = true; // true: USD -> UZS (Bank Buy), false: UZS -> USD (Bank Sell)
+
+  bool _isUsdToUzs =
+      true; // true: USD -> UZS (Bank Buy), false: UZS -> USD (Bank Sell)
 
   BankModel? _getBestBuyBank(List<BankModel> banks) {
     if (banks.isEmpty) return null;
@@ -55,16 +56,17 @@ class _ConverterPageState extends State<ConverterPage> {
       return;
     }
 
-    double amount = double.tryParse(_amountController.text.replaceAll(',', '.')) ?? 0;
-    
+    double amount =
+        double.tryParse(_amountController.text.replaceAll(',', '.')) ?? 0;
+
     if (_isUsdToUzs) {
       // USD -> UZS: We sell USD to bank, bank BUYS. Result = amount * rate key
-       _resultController.text = (amount * rate).toStringAsFixed(0);
+      _resultController.text = (amount * rate).toStringAsFixed(0);
     } else {
       // UZS -> USD: We buy USD from bank, bank SELLS. Result = amount / rate key
-      if(rate == 0) {
-         _resultController.text = "0";
-         return;
+      if (rate == 0) {
+        _resultController.text = "0";
+        return;
       }
       _resultController.text = (amount / rate).toStringAsFixed(2);
     }
@@ -88,7 +90,8 @@ class _ConverterPageState extends State<ConverterPage> {
         final bestSellBank = _getBestSellBank(state.allBanks);
 
         final activeBank = _isUsdToUzs ? bestBuyBank : bestSellBank;
-        final activeRate = _isUsdToUzs ? (bestBuyBank?.buy ?? 0) : (bestSellBank?.sell ?? 0);
+        final activeRate =
+            _isUsdToUzs ? (bestBuyBank?.buy ?? 0) : (bestSellBank?.sell ?? 0);
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -122,9 +125,9 @@ class _ConverterPageState extends State<ConverterPage> {
                   isReadOnly: false,
                   isInt: !_isUsdToUzs, // Input UZS is Int, USD is double
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 GestureDetector(
                   onTap: _onSwap,
                   child: Container(
@@ -133,7 +136,7 @@ class _ConverterPageState extends State<ConverterPage> {
                       color: AppColors.primarySurface,
                       shape: BoxShape.circle,
                       boxShadow: [
-                         BoxShadow(
+                        BoxShadow(
                           color: Colors.black.withOpacity(0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
@@ -156,11 +159,11 @@ class _ConverterPageState extends State<ConverterPage> {
                   rate: activeRate,
                   // Show bank info only on the top card or both? Usually top card dictates the rate source.
                   // Let's hide it for result to keep it clean or show same?
-                  // Requirement: "show which bank has this rate". 
-                  // It logicly belongs to the conversion execution. Let's hide on result to reduce noise, 
-                  // or show it to confirm "this result is from X bank". 
+                  // Requirement: "show which bank has this rate".
+                  // It logicly belongs to the conversion execution. Let's hide on result to reduce noise,
+                  // or show it to confirm "this result is from X bank".
                   // Let's stick to showing it on top card (Source of rate).
-                  bankName: null, 
+                  bankName: null,
                   bankImage: null,
                   controller: _resultController,
                   focusNode: FocusNode(), // Dummy
@@ -240,19 +243,21 @@ class _ConverterPageState extends State<ConverterPage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                           if(bankImage != null)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Image.network(
-                                    bankImage,
-                                    width: 16,
-                                    height: 16,
-                                    errorBuilder: (context, error, stackTrace) => const SizedBox(),
-                                  ), 
+                          if (bankImage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Image.network(
+                                  bankImage,
+                                  width: 16,
+                                  height: 16,
+                                  errorBuilder:
+                                      (context, error, stackTrace) =>
+                                          const SizedBox(),
+                                ),
                               ),
-                              ),
+                            ),
                           Text(
                             bankName,
                             style: TextStyle(
@@ -276,7 +281,9 @@ class _ConverterPageState extends State<ConverterPage> {
             readOnly: isReadOnly,
             keyboardType: TextInputType.numberWithOptions(decimal: !isInt),
             inputFormatters: [
-               FilteringTextInputFormatter.allow(RegExp(isInt ? r'[0-9]' : r'[0-9,.]')),
+              FilteringTextInputFormatter.allow(
+                RegExp(isInt ? r'[0-9]' : r'[0-9,.]'),
+              ),
             ],
             style: const TextStyle(
               fontSize: 24,
@@ -285,7 +292,9 @@ class _ConverterPageState extends State<ConverterPage> {
             ),
             decoration: InputDecoration(
               hintText: "0",
-              hintStyle: TextStyle(color: AppColors.textSecondary.withOpacity(0.5)),
+              hintStyle: TextStyle(
+                color: AppColors.textSecondary.withOpacity(0.5),
+              ),
               border: InputBorder.none,
               prefixIcon: Icon(icon, color: AppColors.textPrimary),
             ),

@@ -44,7 +44,7 @@ class _MainPageState extends State<MainPage> {
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
-              children: const [HomePage(), SettingsPage(), ConverterPage()],
+              children: const [HomePage(), ConverterPage(), SettingsPage()],
             ),
           );
         },
@@ -64,14 +64,17 @@ class _MainPageState extends State<MainPage> {
                 label: 'Bosh sahifa',
               ),
               NavigationDestination(
+                icon: SvgPicture.asset(AppAssets.icons.dollar),
+                selectedIcon: SvgPicture.asset(
+                  AppAssets.icons.dollar,
+                  color: AppColors.primary,
+                ),
+                label: 'Kalkulyator',
+              ),
+              NavigationDestination(
                 icon: SvgPicture.asset(AppAssets.icons.settings),
                 selectedIcon: SvgPicture.asset(AppAssets.icons.settingsFilled),
                 label: 'Sozlamalar',
-              ),
-              NavigationDestination(
-                icon: SvgPicture.asset(AppAssets.icons.dollar),
-                selectedIcon: SvgPicture.asset(AppAssets.icons.dollar, color: AppColors.primary),
-                label: 'Kalkulyator',
               ),
             ],
           );
