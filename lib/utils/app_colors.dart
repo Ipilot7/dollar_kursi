@@ -14,6 +14,8 @@ class AppColors {
   static const Color background = Color(0xFFFCFCFF);
   static const Color primary = Color(0xFF1B72C0);
   static const Color text = Color(0xFF1B1C1F);
+  static const Color textPrimary = onSurface20; // основной текст
+  static const Color textSecondary = onSurface40; // вторичный текст
 
   // Тёмная тема
   static const Color onPrimaryContainerDark = Color(0xFFE1ECFF);
@@ -28,4 +30,6 @@ class AppColors {
   static const Color onPrimaryDark = Color(0xFF00152A);
   static const Color surfaceContainerDark = Color(0xFF181A20);
   static const Color onSurface12Dark = Color(0x1FFFFFFF); // 12% белого
+  static const Color textPrimaryDark = onSurface20Dark;
+  static const Color textSecondaryDark = onSurface40Dark;
 }

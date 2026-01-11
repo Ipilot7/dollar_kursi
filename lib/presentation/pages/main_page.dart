@@ -8,6 +8,7 @@ import '../widgets/sort_item.dart';
 import '../widgets/drawer.dart';
 import 'settings_page.dart';
 import 'home_page.dart';
+import 'converter_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -43,7 +44,7 @@ class _MainPageState extends State<MainPage> {
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
-              children: const [HomePage(), SettingsPage()],
+              children: const [HomePage(), SettingsPage(), ConverterPage()],
             ),
           );
         },
@@ -66,6 +67,11 @@ class _MainPageState extends State<MainPage> {
                 icon: SvgPicture.asset(AppAssets.icons.settings),
                 selectedIcon: SvgPicture.asset(AppAssets.icons.settingsFilled),
                 label: 'Sozlamalar',
+              ),
+              NavigationDestination(
+                icon: SvgPicture.asset(AppAssets.icons.dollar),
+                selectedIcon: SvgPicture.asset(AppAssets.icons.dollar, color: AppColors.primary),
+                label: 'Kalkulyator',
               ),
             ],
           );
